@@ -27,8 +27,6 @@ int main(int argc, char** argv) {
     bool debug = true;
     bool Connection_error = false;
 
-    const int buffersize = 10000;
-
     Target *target1;
     target1 = new Target(target, 80, false);
 
