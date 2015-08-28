@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         connection1 = new HTTP_Connection(target1, 10, true, 3);
 
     } catch (char const *error) {
-        cout << "(main) ERROR!\n" << "++" << error << "++" << endl;
+        cout << "(main) ERROR!\n" << "+++" << error << "+++" << endl;
         Connection_error = true;
     }
 
