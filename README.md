@@ -3,11 +3,11 @@
 c-wlib is intended primarily for building penetration testing tools in C++, without having to deal with sockets, but it can also be used for a vast variaty o clients programms.
 
 No need for "c stytle" programming with char pointers. The library's functions are using strings and integers, for sending and receiving datas. 
-You create your object, based on the communication you want to accomplish. You can create a more generic object, with TCP_Connection class, or a more specific with HTTP_Connection object. 
+You create your object, based on the communication you want to accomplish. You can create a more generic object, with TCP class, or a more specific with HTTP object. 
 
-Example member functions from HTTP_Connection class:
+Example member functions, from HTTP class:
 
- HTTP_Connection(const Target* target, const int sec_timeout, const bool debug = true, const int verbose_level=3);
+ HTTP(const Target* target, const int sec_timeout, const bool debug = true, const int verbose_level=3);
 
     //setters
  
