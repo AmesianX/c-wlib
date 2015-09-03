@@ -1,5 +1,5 @@
 /* 
- * File:   HTTP_Connection.cpp
+ * File:   HTTP.cpp
  * Author: Dimopoulos Elias
  * LinkedIn: https://gr.linkedin.com/in/DimopoulosElias
  * e-mail: Dimopoulos.Elias@gmail.com
@@ -11,7 +11,7 @@
 
 #define D(a) cout<<endl<<"--------->\n"<<a<<"\n<------------"<<endl
 
-#include "headers/HTTP_Connection.h"
+#include "headers/HTTP.h"
 #include <vector>
 using std::vector;
 #include <cstring> //memset
@@ -20,15 +20,15 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-HTTP_Connection::HTTP_Connection(const Target* target, const int sec_timeout, const bool debug, const int verbose_level)
+HTTP::HTTP(const Target* target, const int sec_timeout, const bool debug, const int verbose_level)
 :
-TCP_Connection(target, sec_timeout, debug, verbose_level),
-debugger("HTTP_Connection", debug, verbose_level) {
+TCP(target, sec_timeout, debug, verbose_level),
+debugger("HTTP", debug, verbose_level) {
     debugger.print_constructor();
     set_Host(target->get_target());
 }
 
-const string HTTP_Connection::POST(const string relativeURL, const string data) {
+const string HTTP::POST(const string relativeURL, const string data) {
 
     string http_post_request;
     size_t pos=0;
@@ -58,7 +58,7 @@ const string HTTP_Connection::POST(const string relativeURL, const string data) 
 }
 
 
-const string HTTP_Connection::GET(const string relativeURL) {
+const string HTTP::GET(const string relativeURL) {
 
     if (check_relativeURL(relativeURL) == true) {
         
@@ -76,7 +76,7 @@ const string HTTP_Connection::GET(const string relativeURL) {
 
 }
 
-const string HTTP_Connection::OPTIONS(const string relativeURL) {
+const string HTTP::OPTIONS(const string relativeURL) {
 
     if (check_relativeURL(relativeURL) == true) {
         
@@ -93,7 +93,7 @@ const string HTTP_Connection::OPTIONS(const string relativeURL) {
 
 }
 
-const string HTTP_Connection::HEAD(const string relativeURL) {
+const string HTTP::HEAD(const string relativeURL) {
 
     if (check_relativeURL(relativeURL) == true) {
         
@@ -110,7 +110,7 @@ const string HTTP_Connection::HEAD(const string relativeURL) {
 
 }
 
-const string HTTP_Connection::receive_data(const long int buffer_size) {
+const string HTTP::receive_data(const long int buffer_size) {
     //SOCKET IS IN O_NONBLOCK MODE, FROM _connect().
     //IF YOU WANT IT IN BLOCK MODE:
     //set_socket_flags(fcntl(get_socket_fd(), F_GETFL, 0) & ~O_NONBLOCK);
@@ -182,7 +182,7 @@ const string HTTP_Connection::receive_data(const long int buffer_size) {
     return received_data_str;
 }
 
-const int HTTP_Connection::set_received_data_flag(const string received_data) {
+const int HTTP::set_received_data_flag(const string received_data) {
     size_t pos1 = 0;
     size_t pos2 = 0;
     size_t pos3 = 0;
@@ -240,108 +240,108 @@ const int HTTP_Connection::set_received_data_flag(const string received_data) {
     return get_received_data_flag();
 }
 
-const int HTTP_Connection::get_received_data_flag() const {
+const int HTTP::get_received_data_flag() const {
     return this->received_data_flag;
 }
 
-const string HTTP_Connection::get_Accept() const {
+const string HTTP::get_Accept() const {
     return this->Accept;
 }
 
-const string HTTP_Connection::get_Accept_Encoding() const {
+const string HTTP::get_Accept_Encoding() const {
     return this->Accept_Encoding;
 }
 
-const string HTTP_Connection::get_Accept_Language() const {
+const string HTTP::get_Accept_Language() const {
     return this->Accept_Language;
 }
 
-const string HTTP_Connection::get_User_Agent() const {
+const string HTTP::get_User_Agent() const {
     return this->User_Agent;
 }
 
-const string HTTP_Connection::get_relativeURL() const {
+const string HTTP::get_relativeURL() const {
     return this->relativeURL;
 }
 
-const string HTTP_Connection::get_http_request() const {
+const string HTTP::get_http_request() const {
     return this->http_request;
 }
 
-const string HTTP_Connection::get_Cookie() const {
+const string HTTP::get_Cookie() const {
     return this->Cookie;
 }
 
-const string HTTP_Connection::get_Content_Length() const {
+const string HTTP::get_Content_Length() const {
     return this->Content_Length;
 }
 
-const string HTTP_Connection::get_Content_Type() const {
+const string HTTP::get_Content_Type() const {
     return this->Content_Type;
 }
 
-const string HTTP_Connection::get_Host() const {
+const string HTTP::get_Host() const {
     return this->Host;
 }
 
-const int HTTP_Connection::get_verbose_level() const{
+const int HTTP::get_verbose_level() const{
     return debugger.get_verbose_level();
 }
 
-const int HTTP_Connection::set_Accept(const string Accept) {
+const int HTTP::set_Accept(const string Accept) {
     this->Accept = "Accept: "+Accept;
     return 0;
 }
 
-const int HTTP_Connection::set_Accept_Encoding(const string Accept_Encoding) {
+const int HTTP::set_Accept_Encoding(const string Accept_Encoding) {
     this->Accept_Encoding = "Accept-Encoding: "+Accept_Encoding;
     return 0;
 }
 
-const int HTTP_Connection::set_Accept_Language(const string Accept_Language) {
+const int HTTP::set_Accept_Language(const string Accept_Language) {
     this->Accept_Language = "Accept-Language: "+Accept_Language;
     return 0;
 }
 
-const int HTTP_Connection::set_User_Agent(const string User_Agent) {
+const int HTTP::set_User_Agent(const string User_Agent) {
     this->User_Agent = "User-Agent: "+User_Agent;
     return 0;
 }
 
-const int HTTP_Connection::set_Content_Length(const string Content_Length) {
+const int HTTP::set_Content_Length(const string Content_Length) {
     this->Content_Length= "Content-Length: "+Content_Length;
     return 0;
 }
 
-const int HTTP_Connection::set_Content_Type(const string Content_Type) {
+const int HTTP::set_Content_Type(const string Content_Type) {
     this->Content_Type= "Content-Type: "+Content_Type;
     return 0;
 }
 
-const int HTTP_Connection::set_Cookie(const string Cookie) {
+const int HTTP::set_Cookie(const string Cookie) {
     this->Cookie="Cookie: "+Cookie;
     return 0;
 }
 
-const int HTTP_Connection::set_Host(const string Host) {
+const int HTTP::set_Host(const string Host) {
     this->Host="Host: "+Host;
     return 0;
 }
 
-const int HTTP_Connection::set_relativeURL(const string relativeURL) {
+const int HTTP::set_relativeURL(const string relativeURL) {
     this->relativeURL = relativeURL;
     return 0;
 }
 
-const int HTTP_Connection::set_verbose_level(const int verbose_level) {
-   TCP_Connection::set_verbose_level(verbose_level);
+const int HTTP::set_verbose_level(const int verbose_level) {
+   TCP::set_verbose_level(verbose_level);
    return debugger.set_verbose_level(verbose_level);    
 }
 
 
 
 
-const bool HTTP_Connection::check_relativeURL(const string relativeURL) const {
+const bool HTTP::check_relativeURL(const string relativeURL) const {
     if (relativeURL.find("/") != std::string::npos)
         return true;
     else {
@@ -351,7 +351,7 @@ const bool HTTP_Connection::check_relativeURL(const string relativeURL) const {
 
 }
 
-const int HTTP_Connection::create_request(const string method) {
+const int HTTP::create_request(const string method) {
 
     this->http_request.clear();
 
@@ -388,7 +388,7 @@ const int HTTP_Connection::create_request(const string method) {
 
 }
 
-HTTP_Connection::~HTTP_Connection() {
+HTTP::~HTTP() {
     debugger.print_destructor();
 }
 

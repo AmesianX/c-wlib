@@ -1,5 +1,5 @@
 /* 
- * File:   Connection.h
+ * File:   Protocol.h
  * Author: Dimopoulos Elias
  * LinkedIn: https://gr.linkedin.com/in/DimopoulosElias
  * e-mail: Dimopoulos.Elias@gmail.com
@@ -9,8 +9,8 @@
  * Created on August 2, 2015, 1:16 AM
  */
 
-#ifndef CONNECTION_H
-#define	CONNECTION_H
+#ifndef Protocol_H
+#define	Protocol_H
 
 //#define MAX_TIMEOUT 600
 #include "Debugger.h"
@@ -25,10 +25,10 @@ using std::string;
 #include <memory> 
 using std::unique_ptr;
 
-class Connection {
+class Protocol {
 public:
-    Connection(const Target* target, const int sec_timeout = 5, const string socket_type = "SOCK_STREAM", const bool debug = true, const int verbose_level=3);
-    virtual ~Connection();
+    Protocol(const Target* target, const int sec_timeout = 5, const string socket_type = "SOCK_STREAM", const bool debug = true, const int verbose_level=3);
+    virtual ~Protocol();
 
     virtual const int send_data(const string send_data);
     virtual const string receive_data(const long int buffer_size);
@@ -39,7 +39,7 @@ public:
     virtual const int set_timeout(const int sec_timeout);
 
     
-    //++++++++++http connections++++++++++
+    //++++++++++http Protocols++++++++++
     virtual const bool check_relativeURL(const string relativeURL) const=0;
 
     //header:
@@ -101,7 +101,7 @@ protected:
       
     const Target target;
     
-    //++++++++++http connections++++++++++
+    //++++++++++http Protocols++++++++++
     virtual const int create_request(const string method)=0;
     virtual const int set_relativeURL(const string relativeURL)=0;
     virtual const string get_relativeURL() const=0;
@@ -139,5 +139,5 @@ private:
 
 };
 
-#endif	/* CONNECTION_H */
+#endif	/* Protocol_H */
 

@@ -1,5 +1,5 @@
 /* 
- * File:   HTTP_Connection.h
+ * File:   HTTP.h
  * Author: Dimopoulos Elias
  * LinkedIn: https://gr.linkedin.com/in/DimopoulosElias
  * e-mail: Dimopoulos.Elias@gmail.com
@@ -9,17 +9,17 @@
  * Created on August 12, 2015, 12:20 AM
  */
 
-#ifndef HTTP_CONNECTION_H
-#define	HTTP_CONNECTION_H
+#ifndef HTTP_H
+#define	HTTP_H
 
-#include "TCP_Connection.h"
+#include "TCP.h"
 
-class HTTP_Connection : public TCP_Connection {
+class HTTP : public TCP {
 public:
-    HTTP_Connection(const Target* target, const int sec_timeout, const bool debug = true, const int verbose_level=3);
-    virtual ~HTTP_Connection();
+    HTTP(const Target* target, const int sec_timeout, const bool debug = true, const int verbose_level=3);
+    virtual ~HTTP();
 
-    //in case you want to use Connection::send_data instead of http methods
+    //in case you want to use Protocol::send_data instead of http methods
     virtual const string receive_data(const long int buffer_size);
     
     virtual const int set_verbose_level(const int verbose_level);
@@ -115,5 +115,5 @@ private:
 
 };
 
-#endif	/* HTTP_CONNECTION_H */
+#endif	/* HTTP_H */
 

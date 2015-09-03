@@ -1,5 +1,5 @@
 /* 
- * File:   Connection.cpp
+ * File:   Protocol.cpp
  * Author: Dimopoulos Elias
  * LinkedIn: https://gr.linkedin.com/in/DimopoulosElias
  * e-mail: Dimopoulos.Elias@gmail.com
@@ -12,7 +12,7 @@
 #define D(a) cout<<endl<<"--------->"<<a<<"<------------"<<endl
 #define MAX_TIMEOUT 600
 
-#include "headers/Connection.h"
+#include "headers/Protocol.h"
 #include <iostream>
 using std::cout;
 using std::cin;
@@ -26,9 +26,9 @@ using std::vector;
 
 
 
-Connection::Connection(const Target* target, const int sec_timeout, const string socket_type, const bool debug, const int verbose_level)
+Protocol::Protocol(const Target* target, const int sec_timeout, const string socket_type, const bool debug, const int verbose_level)
 :
-debugger("Connection", debug, verbose_level),
+debugger("Protocol", debug, verbose_level),
 target(*target),
 socket_type(check_socket_type(socket_type)),
 sec_timeout(check_sec_timeout(sec_timeout)),
@@ -36,7 +36,7 @@ timeout(initialize_timeout()),
 target_restrictions_struct(initialize_struct()) {
 
     if (get_socket_type() == 3) {
-        throw ("I think you chose to kill your Connection, because socket_type is not supported. Exception in Connection's Constructor");
+        throw ("I think you chose to kill your Protocol, because socket_type is not supported. Exception in Protocol's Constructor");
         delete this;
     }
 
@@ -44,18 +44,18 @@ target_restrictions_struct(initialize_struct()) {
     debugger.print_constructor();
 
     if (!try_getaddrinfo(getaddrinfo(target->get_target_c_str(), target->get_port_c_str(), &this->target_restrictions_struct, &this->target_struct))) {
-        throw ("getaddrinfo didn't succeed. I can't use any kind of sockets. Killing your Connection object!");
+        throw ("getaddrinfo didn't succeed. I can't use any kind of sockets. Killing your Protocol object!");
         delete this;
     }
        
 
 }
 
-const int Connection::check_socket_type(const string socket_type) const {
+const int Protocol::check_socket_type(const string socket_type) const {
     if (socket_type != "SOCK_STREAM" && socket_type != "SOCK_DGRAM") {
         int choice = 0;
 
-        cout << "*MSG from class \"Connection\"-->function \"initialize_struct\" :" << endl;
+        cout << "*MSG from class \"Protocol\"-->function \"initialize_struct\" :" << endl;
         cout << "++Socket type \"" << socket_type << "\"" << "is not supported!++" << endl;
         cout << "++Supported socket types (1)\"SOCK_STREAM\" and (2)\"SOCK_DGRAM\".++" << endl;
         cout << "Choose 1, 2, or 3 to kill this object: ";
@@ -79,10 +79,10 @@ const int Connection::check_socket_type(const string socket_type) const {
 
 }
 
-const int Connection::check_sec_timeout(const int sec_timeout) const {
+const int Protocol::check_sec_timeout(const int sec_timeout) const {
 
     if (sec_timeout > MAX_TIMEOUT || sec_timeout<1 ) {
-        cout << "*MSG from class \"Connection\"-->function \"check_sec_timeout\" :" << endl;
+        cout << "*MSG from class \"Protocol\"-->function \"check_sec_timeout\" :" << endl;
         cout << "++You set timeout "<<sec_timeout<<" secs."<<"You must set 0< timeout <="<<MAX_TIMEOUT<<". Changing it to " << MAX_TIMEOUT << " sec++" << endl;
 
         return MAX_TIMEOUT;
@@ -90,7 +90,7 @@ const int Connection::check_sec_timeout(const int sec_timeout) const {
 
 }
 
-const timeval Connection::initialize_timeout() {
+const timeval Protocol::initialize_timeout() {
     //this block for member initialization
     timeval tmp;
     tmp.tv_sec = get_sec_timeout();
@@ -103,12 +103,12 @@ const timeval Connection::initialize_timeout() {
     return tmp; //use this in member initialization
 }
 
-const char* const Connection::initialize_port(const int port) const {
+const char* const Protocol::initialize_port(const int port) const {
     string port_str = std::to_string(port);
     return port_str.c_str();
 }
 
-const struct addrinfo Connection::initialize_struct() {
+const struct addrinfo Protocol::initialize_struct() {
 
     tmp_target_struct = unique_ptr<addrinfo> (new addrinfo);
 
@@ -126,11 +126,11 @@ const struct addrinfo Connection::initialize_struct() {
 
 }
 
-const int Connection::get_socket_type() const {
+const int Protocol::get_socket_type() const {
     return this->socket_type;
 }
 
-bool Connection::try_getaddrinfo(int getaddrinfo_error_code) {
+bool Protocol::try_getaddrinfo(int getaddrinfo_error_code) {
 
     if (getaddrinfo_error_code != 0) {
         debugger.print_msg("Constructor-getaddrinfo", string(gai_strerror(getaddrinfo_error_code), strlen(gai_strerror(getaddrinfo_error_code))));
@@ -141,39 +141,39 @@ bool Connection::try_getaddrinfo(int getaddrinfo_error_code) {
     }
 }
 
-const int Connection::get_socket_fd() const {
+const int Protocol::get_socket_fd() const {
     return this->socket_file_descriptor;
 }
 
-const int Connection::get_socket_flags() const {
+const int Protocol::get_socket_flags() const {
     return this->socket_fd_flags;
 }
 
-const int Connection::get_select_check() const {
+const int Protocol::get_select_check() const {
     return this->select_check;
 }
 
-timeval* const Connection::get_timeval() {
+timeval* const Protocol::get_timeval() {
     return &this->timeout;
 }
 
-const addrinfo* const Connection::get_target_struct() const{
+const addrinfo* const Protocol::get_target_struct() const{
     return this->target_struct;
 }
 
-fd_set * const Connection::get_fdset_read() {
+fd_set * const Protocol::get_fdset_read() {
     return &this->read;
 }
 
-fd_set * const Connection::get_fdset_error() {
+fd_set * const Protocol::get_fdset_error() {
     return &this->error;
 }
 
-fd_set * const Connection::get_fdset_write() {
+fd_set * const Protocol::get_fdset_write() {
     return &this->write;
 }
 
-const int Connection::set_socket_fd(const int socket_file_descriptor) {
+const int Protocol::set_socket_fd(const int socket_file_descriptor) {
 
     if (socket_file_descriptor == -1) {
         debugger.print_msg("set_socket_fd()", "socket error!\nerrno:\t" + string(strerror(errno)));
@@ -185,22 +185,22 @@ const int Connection::set_socket_fd(const int socket_file_descriptor) {
 
 }
 
-const int Connection::set_socket_flags(const int socket_flags) {
+const int Protocol::set_socket_flags(const int socket_flags) {
     this->socket_fd_flags = socket_flags;
     return 0;
 }
 
-const int Connection::set_select_check(const int select_check) {
+const int Protocol::set_select_check(const int select_check) {
     this->select_check = select_check;
     return 0;
 }
 
-const int Connection::get_sec_timeout() const {
+const int Protocol::get_sec_timeout() const {
     return this->sec_timeout;
 }
 
 
-const int Connection::_connect() {
+const int Protocol::_connect() {
 
     if (set_socket_fd(socket(this->target_struct->ai_family, this->target_struct->ai_socktype,
             this->target_struct->ai_protocol)) == -1) {
@@ -232,7 +232,7 @@ const int Connection::_connect() {
 
 }
 
-const int Connection::send_data(const string send_data) {
+const int Protocol::send_data(const string send_data) {
 
     //SOCKET IS IN O_NONBLOCK MODE, FROM _connect().
     //IF YOU WANT IT IN BLOCK MODE:
@@ -245,7 +245,7 @@ const int Connection::send_data(const string send_data) {
     FD_ZERO(&this->write);
     FD_SET(get_socket_fd(), &this->write);
 
-    set_select_check(select(get_socket_fd() + 1, NULL, &this->write, &this->error, &timeout)); //set connection timeout with select() 
+    set_select_check(select(get_socket_fd() + 1, NULL, &this->write, &this->error, &timeout)); //set Protocol timeout with select() 
 
     if (select_ok("send_data")) {
 
@@ -275,7 +275,7 @@ const int Connection::send_data(const string send_data) {
 
 }
 
-const string Connection::receive_data(const long int buffer_size) {
+const string Protocol::receive_data(const long int buffer_size) {
 
     //SOCKET IS IN O_NONBLOCK MODE, FROM _connect().
     //IF YOU WANT IT IN BLOCK MODE:
@@ -352,7 +352,7 @@ const string Connection::receive_data(const long int buffer_size) {
 
 }
 
-const int Connection::flags() const {
+const int Protocol::flags() const {
     if (get_socket_type() == 1)//tcp
         return MSG_WAITALL;
 
@@ -363,14 +363,14 @@ const int Connection::flags() const {
         return 0;
 }
 
-const bool Connection::select_ok(const string calling_function) {
+const bool Protocol::select_ok(const string calling_function) {
 
     if (get_select_check() < 0) {
         debugger.print_msg("select_ok() called from " + calling_function, "Error in select().\nerrno:\t" + string(strerror(errno)));
         initialize_timeout();
         return false;
     } else if (get_select_check() == 0) {
-        debugger.print_msg("select_ok() called from " + calling_function, "Connection timed out.\nerrno:\t" + string(strerror(errno)));
+        debugger.print_msg("select_ok() called from " + calling_function, "Protocol timed out.\nerrno:\t" + string(strerror(errno)));
         initialize_timeout();
         return false;
     } else {
@@ -380,7 +380,7 @@ const bool Connection::select_ok(const string calling_function) {
 
 }
 
-const int Connection::check_recvfrom(const int recv_from) const {
+const int Protocol::check_recvfrom(const int recv_from) const {
 
     if (recv_from == 0) {
         debugger.print_msg("check_recvfrom()", "No msg received.\nerrno:\t" + string(strerror(errno)));
@@ -396,15 +396,15 @@ const int Connection::check_recvfrom(const int recv_from) const {
 
 }
 
-const int Connection::get_verbose_level() const{
+const int Protocol::get_verbose_level() const{
     return debugger.get_verbose_level();
 }
 
-const int Connection::set_verbose_level(const int verbose_level) {
+const int Protocol::set_verbose_level(const int verbose_level) {
    return debugger.set_verbose_level(verbose_level);    
 }
 
-const int Connection::set_timeout(const int sec_timeout) {
+const int Protocol::set_timeout(const int sec_timeout) {
     
    this->sec_timeout = check_sec_timeout(sec_timeout);
    initialize_timeout();
@@ -413,7 +413,7 @@ const int Connection::set_timeout(const int sec_timeout) {
 }
 
 
-Connection::~Connection() {
+Protocol::~Protocol() {
     debugger.print_destructor();
     close(get_socket_fd());
 }
